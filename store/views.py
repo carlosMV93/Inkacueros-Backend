@@ -4,7 +4,13 @@ from .models import Type, Brand, OrderItem, Orders, Products
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.contrib.auth.models import User
 
+# from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.conf import settings
+
+from rest_framework.views import APIView
 from .serializers import (
     TypeSerializer,
     BrandSerializer,
@@ -15,6 +21,7 @@ from .serializers import (
     UserSerializer,
     OrderItemDetailSerializer,
     ProductsDetailSerializer,
+    EmailSerializer,
 )
 
 
@@ -75,6 +82,35 @@ class OrderItemDetailView(generics.RetrieveAPIView):
 class OrderItemListView(generics.ListAPIView):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemDetailSerializer
+
+
+# OLVIDAR CONTRASEÑA
+class SendPasswordEmailView(APIView):
+    def post(self, request):
+        serializer = EmailSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data["username"]
+            email = serializer.validated_data["email"]
+
+            try:
+                user = User.objects.get(username=username)
+                # Create EmailMessage instance
+                email_message = EmailMessage(
+                    subject="Your Password",
+                    body=f"Hello {username}, your password is: {user.password}",
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=[email],
+                )
+                # Send email
+                email_message.send()
+                return Response(
+                    {"message": "Email sent successfully."}, status=status.HTTP_200_OK
+                )
+            except User.DoesNotExist:
+                return Response(
+                    {"error": "User not found."}, status=status.HTTP_404_NOT_FOUND
+                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # VALIDAR USUARIO

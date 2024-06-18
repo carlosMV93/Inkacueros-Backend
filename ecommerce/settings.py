@@ -27,10 +27,7 @@ SECRET_KEY = "django-insecure-$0jev+#yi*q)ci3cg2t-s_v6!#w%f#utzf-w!k)m#8bj0f4^&!
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:8080"
-]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://localhost:8080"]
 
 # Application definition
 
@@ -175,3 +172,19 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Configuración del backend de correo electrónico
+#  Importa el backend personalizado que creaste
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+# Configuración del backend de correo electrónico
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False  # Asegúrate de que está en False
+EMAIL_HOST_USER = "signia.info.s4@gmail.com"
+EMAIL_HOST_PASSWORD = "imfzirlaapgqnjxt"

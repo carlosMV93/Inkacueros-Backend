@@ -74,6 +74,12 @@ class OrderItemDetailSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+# OLVIDAR CONTRASEÑA
+class EmailSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    email = serializers.EmailField()
+
+
 # VALIDAR USUARIO
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
