@@ -34,6 +34,15 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class OrderItemDetailSerializer(serializers.ModelSerializer):
+    IdProduct = ProductsSerializer()
+    IdOrder = OrdersSerializer()
+
+    class Meta:
+        model = OrderItem
+        fields = "__all__"
+
+
 # VALIDAR USUARIO
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()

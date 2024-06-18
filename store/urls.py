@@ -8,6 +8,7 @@ from .views import (
     ProductsViewSet,
     OrdersViewSet,
     OrderItemViewSet,
+    OrderItemDetailView,
 )
 
 
@@ -23,4 +24,9 @@ urlpatterns = [
     path("", include(router.urls)),
     path("validate_user", views.user_login, name="validate_user"),
     path("create_user", views.create_user, name="create_user"),
+    path(
+        "order-item/<int:id>/",
+        OrderItemDetailView.as_view(),
+        name="order-item-detail",
+    ),
 ]

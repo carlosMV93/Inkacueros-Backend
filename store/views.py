@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status, permissions
+from rest_framework import viewsets, status, permissions, generics
 from .models import Type, Brand, OrderItem, Orders, Products
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -13,6 +13,7 @@ from .serializers import (
     ProductsSerializer,
     UserLoginSerializer,
     UserSerializer,
+    OrderItemDetailSerializer,
 )
 
 
@@ -47,6 +48,12 @@ class ProductsViewSet(viewsets.ModelViewSet):
 class OrderItemViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
+
+
+class OrderItemDetailView(generics.RetrieveAPIView):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemDetailSerializer
+    lookup_field = "id"
 
 
 # VALIDAR USUARIO
