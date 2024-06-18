@@ -34,6 +34,37 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+# DETALLE PRODUCTOS
+class ProductsDetailSerializer(serializers.ModelSerializer):
+    IdBrand = BrandSerializer()
+    IdType = TypeSerializer()
+
+    class Meta:
+        model = Products
+        fields = "__all__"
+
+
+# DETALLE PRODUCTO
+class ProductDetailSerializer(serializers.ModelSerializer):
+    IdBrand = BrandSerializer()
+    IdType = TypeSerializer()
+
+    class Meta:
+        model = Products
+        fields = "__all__"
+
+
+# DETALLE PEDIDOS
+class OrdersItemDetailSerializer(serializers.ModelSerializer):
+    IdProduct = ProductsSerializer()
+    IdOrder = OrdersSerializer()
+
+    class Meta:
+        model = OrderItem
+        fields = "__all__"
+
+
+# DETALLE PEDIDO
 class OrderItemDetailSerializer(serializers.ModelSerializer):
     IdProduct = ProductsSerializer()
     IdOrder = OrdersSerializer()

@@ -14,6 +14,7 @@ from .serializers import (
     UserLoginSerializer,
     UserSerializer,
     OrderItemDetailSerializer,
+    ProductsDetailSerializer,
 )
 
 
@@ -50,10 +51,30 @@ class OrderItemViewSet(viewsets.ModelViewSet):
     serializer_class = OrderItemSerializer
 
 
+# DETALLE PRODUCTO
+class ProductsDetailViewSet(generics.RetrieveAPIView):
+    queryset = Products.objects.all()
+    serializer_class = ProductsDetailSerializer
+    lookup_field = "id"
+
+
+# DETALLE PRODUCTOS
+class ProductsListViewSet(generics.ListAPIView):
+    queryset = Products.objects.all()
+    serializer_class = ProductsDetailSerializer
+
+
+# DETALLE PEDIDO
 class OrderItemDetailView(generics.RetrieveAPIView):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemDetailSerializer
     lookup_field = "id"
+
+
+# DETALLE PEDIDOS
+class OrderItemListView(generics.ListAPIView):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemDetailSerializer
 
 
 # VALIDAR USUARIO

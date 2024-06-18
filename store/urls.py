@@ -9,6 +9,8 @@ from .views import (
     OrdersViewSet,
     OrderItemViewSet,
     OrderItemDetailView,
+    OrderItemListView,
+    ProductsListViewSet,
 )
 
 
@@ -29,4 +31,6 @@ urlpatterns = [
         OrderItemDetailView.as_view(),
         name="order-item-detail",
     ),
+    path("order-items/", OrderItemListView.as_view(), name="order-item-list"),
+    path("product-items/", ProductsListViewSet.as_view(), name="product-item-list"),
 ]
