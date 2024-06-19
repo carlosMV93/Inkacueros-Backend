@@ -34,6 +34,15 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+# CREAR OREDER ITEM Y ENVIO DE CORREO
+class OrderItemCreateSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = OrderItem
+        fields = ["Name", "Description", "Price", "email"]
+
+
 # DETALLE PRODUCTOS
 class ProductsDetailSerializer(serializers.ModelSerializer):
     IdBrand = BrandSerializer()

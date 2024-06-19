@@ -1,0 +1,22 @@
+<!-- templates/order_item_email.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Artículo de pedido creado</title>
+  </head>
+  <body>
+    <h1>Artículo de pedido creado</h1>
+    <p>Hola, {{ username }},</p>
+    <p>Detalles del artículo de su pedido:</p>
+    <ul>
+      <li>Nombre: {{ name }}</li>
+      <li>Descripcion: {{ description }}</li>
+      <li>Precio: {{ price }}</li>
+      <li>Product ID: {{ product_id }}</li>
+      <li>Order ID: {{ order_id }}</li>
+    </ul>
+    <p>Thank you for your order!</p>
+  </body>
+</html>

@@ -25,6 +25,7 @@ from .serializers import (
     ProductsDetailSerializer,
     EmailSerializer,
     ChangePasswordSerializer,
+    OrderItemCreateSerializer,
 )
 
 
@@ -170,5 +171,36 @@ class ChangePasswordView(APIView):
                 return Response(
                     {"username": ["User not found."]}, status=status.HTTP_404_NOT_FOUND
                 )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# CREAR ORDERITEM Y ENVIO DE CORREO
+class OrderItemCreateView(APIView):
+    def post(self, request):
+        serializer = OrderItemSerializer(data=request.data)
+        if serializer.is_valid():
+            order_item = serializer.save()
+            email = request.data.get("Email", None)
+
+            if email:
+                context = {
+                    "username": order_item.Name,
+                    "name": order_item.Name,
+                    "description": order_item.Description,
+                    "price": order_item.Price,
+                    "product_id": order_item.IdProduct.id,
+                    "order_id": order_item.IdOrder.id,
+                }
+
+                html_message = render_to_string("order_item_email.html", context)
+                subject = "Order Item Created"
+                email = EmailMessage(
+                    subject, html_message, "your_email@example.com", [email]
+                )
+                email.content_subtype = "html"
+                email.send()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
