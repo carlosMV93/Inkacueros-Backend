@@ -12,6 +12,7 @@ from .views import (
     OrderItemListView,
     ProductsListViewSet,
     SendPasswordEmailView,
+    ChangePasswordView,
 )
 
 
@@ -27,16 +28,17 @@ urlpatterns = [
     path("", include(router.urls)),
     path("validate_user", views.user_login, name="validate_user"),
     path("create_user", views.create_user, name="create_user"),
-    path(
-        "order-item/<int:id>/",
-        OrderItemDetailView.as_view(),
-        name="order-item-detail",
-    ),
+    path("change-password", ChangePasswordView.as_view(), name="change_password"),
     path("order-items/", OrderItemListView.as_view(), name="order-item-list"),
     path("product-items/", ProductsListViewSet.as_view(), name="product-item-list"),
     path(
         "send-password-email/",
         SendPasswordEmailView.as_view(),
         name="send-password-email",
+    ),
+    path(
+        "order-item/<int:id>/",
+        OrderItemDetailView.as_view(),
+        name="order-item-detail",
     ),
 ]

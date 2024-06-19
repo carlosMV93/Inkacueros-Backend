@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status, permissions, generics
 from .models import Type, Brand, OrderItem, Orders, Products
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.contrib.auth.hashers import check_password
+from rest_framework.permissions import IsAuthenticated
 
-# from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.conf import settings
 
@@ -22,6 +24,7 @@ from .serializers import (
     OrderItemDetailSerializer,
     ProductsDetailSerializer,
     EmailSerializer,
+    ChangePasswordSerializer,
 )
 
 
@@ -130,6 +133,42 @@ def user_login(request):
 def create_user(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
+        user = serializer.save()
+
+        # Enviar correo electrónico
+        subject = "Bienvenido"
+        html_message = render_to_string(
+            "welcome_email.html", {"username": user.username, "email": user.email}
+        )
+        email = EmailMessage(subject, html_message, "tu_email@gmail.com", [user.email])
+        email.content_subtype = "html"
+        email.send()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# CAMBIO DE CONTRASEÑA
+class ChangePasswordView(APIView):
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data["username"]
+            new_password = serializer.validated_data["new_password"]
+
+            try:
+                user = User.objects.get(username=username)
+                user.set_password(new_password)
+                user.save()
+
+                return Response(
+                    {"message": "Password updated successfully"},
+                    status=status.HTTP_200_OK,
+                )
+
+            except User.DoesNotExist:
+                return Response(
+                    {"username": ["User not found."]}, status=status.HTTP_404_NOT_FOUND
+                )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -120,3 +120,9 @@ class UserSerializer(serializers.ModelSerializer):
             is_superuser=validated_data.get("is_superuser", False),
         )
         return user
+
+
+# CAMBIO DE CONTRASEÑA
+class ChangePasswordSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)
