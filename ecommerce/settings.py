@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ["*"]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8080",
-    "http://67.207.87.64:5020/",
+    "http://67.207.87.64:5020",
 ]
 
 # Application definition
