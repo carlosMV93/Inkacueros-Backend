@@ -184,6 +184,7 @@ class OrderItemCreateView(APIView):
         if serializer.is_valid():
             order_item = serializer.save()
             email = request.data.get("Email", None)
+            amount = request.data.get("Cantidad", None)
 
             if email:
                 context = {
@@ -193,6 +194,9 @@ class OrderItemCreateView(APIView):
                     "price": order_item.Price,
                     "product_id": order_item.IdProduct.id,
                     "order_id": order_item.IdOrder.id,
+                    "amount": amount,
+                    "total": amount
+                    * order_item.Price,  # Realiza la multiplicación aquí
                 }
 
                 html_message = render_to_string("order_item_email.html", context)

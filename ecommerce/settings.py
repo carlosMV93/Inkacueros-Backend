@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -189,3 +190,9 @@ EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = False  # Asegúrate de que está en False
 EMAIL_HOST_USER = "signia.info.s4@gmail.com"
 EMAIL_HOST_PASSWORD = "imfzirlaapgqnjxt"
+
+# LLAMAR Y REFERENCIAR A IMAGENS
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]

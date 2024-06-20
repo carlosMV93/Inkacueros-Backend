@@ -1,22 +1,101 @@
-<!-- templates/order_item_email.html -->
+{% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <title>Artículo de pedido creado</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+      }
+      .header {
+        text-align: right;
+        margin-bottom: 20px;
+      }
+      /* Estilos para centrar horizontalmente */
+      .conditions {
+        text-align: center;
+      }
+      .conditions ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .table-container {
+        margin-bottom: 20px;
+      }
+      .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .table-container th,
+      .table-container td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 14px;
+      }
+      .footer p {
+        margin: 5px 0;
+      }
+    </style>
   </head>
   <body>
+    <div class="header">
+      <p>{{ "now"|date:"d F Y"|upper }}</p>
+    </div>
+    <div class="logo-container">
+      <img
+        src="{% static 'images/logoInkakueros.png' %}"
+        alt="Logo Inkacueros"
+        class="logo"
+      />
+      <div class="logo-text">INKACUEROS</div>
+    </div>
     <h1>Artículo de pedido creado</h1>
     <p>Hola, {{ username }},</p>
     <p>Detalles del artículo de su pedido:</p>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Precio unitario</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ description }}</td>
+            <td>{{ amount }}</td>
+            <td>{{ price }}</td>
+            <td>{{ total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="conditions">
+      <h2>Condiciones de trabajo:</h2>
+    </div>
     <ul>
-      <li>Nombre: {{ name }}</li>
-      <li>Descripcion: {{ description }}</li>
-      <li>Precio: {{ price }}</li>
-      <li>Product ID: {{ product_id }}</li>
-      <li>Order ID: {{ order_id }}</li>
+      <li>
+        Deposito de 50% para iniciar el trabajo por adelantado y 50% restante
+        contra entrega del monto total de trabajo
+      </li>
+      <li>10 días hábiles para su entrega final</li>
+      <li>Presentación en Bolsa de polietileno desinfectada</li>
     </ul>
-    <p>Thank you for your order!</p>
+    <div class="footer">
+      <p>Servicio al cliente</p>
+      <p>(+51)987 920 416</p>
+
+      <p>Correo: inkacueros@gmail.com</p>
+    </div>
   </body>
 </html>
