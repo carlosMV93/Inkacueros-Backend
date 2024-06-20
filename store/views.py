@@ -124,7 +124,12 @@ def user_login(request):
     if serializer.is_valid():
         user = serializer.validated_data["user"]
         return Response(
-            {"username": user.username, "email": user.email}, status=status.HTTP_200_OK
+            {
+                "username": user.username,
+                "email": user.email,
+                "admin": user.is_superuser,
+            },
+            status=status.HTTP_200_OK,
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
