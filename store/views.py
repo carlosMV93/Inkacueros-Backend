@@ -128,6 +128,7 @@ def user_login(request):
                 "username": user.username,
                 "email": user.email,
                 "admin": user.is_superuser,
+                "idUser": user.id,
             },
             status=status.HTTP_200_OK,
         )
