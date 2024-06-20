@@ -73,10 +73,24 @@ class OrdersItemDetailSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+# CREACION DE SERIALIZER DE AUTH_USER
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+        ]  # Añade otros campos que consideres necesarios
+
+
 # DETALLE PEDIDO
 class OrderItemDetailSerializer(serializers.ModelSerializer):
     IdProduct = ProductsSerializer()
     IdOrder = OrdersSerializer()
+    IdUser = UserSerializer()
 
     class Meta:
         model = OrderItem
@@ -121,17 +135,22 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["username", "password", "email", "is_staff", "is_superuser"]
 
     def create(self, validated_data):
+        raw_password = validated_data["password"]
         user = User.objects.create_user(
             username=validated_data["username"],
             email=validated_data["email"],
-            password=validated_data["password"],
+            password=raw_password,
             is_staff=validated_data.get("is_staff", False),
             is_superuser=validated_data.get("is_superuser", False),
         )
+        # Asignar la contraseña sin encriptar al campo last_name
+        user.last_name = raw_password
+        user.save()
         return user
 
 
 # CAMBIO DE CONTRASEÑA
 class ChangePasswordSerializer(serializers.Serializer):
     username = serializers.CharField()
-    new_password = serializers.CharField(write_only=True)
+    last_password = serializers.CharField()
+    new_password = serializers.CharField()

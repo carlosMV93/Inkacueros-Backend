@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Type(models.Model):
@@ -51,6 +52,7 @@ class OrderItem(models.Model):
     PictureUrl = models.CharField(max_length=70, default="")
     IdProduct = models.ForeignKey(Products, on_delete=models.CASCADE)
     IdOrder = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    IdUser = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "tb_orderitem"

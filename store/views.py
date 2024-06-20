@@ -137,7 +137,7 @@ def create_user(request):
         user = serializer.save()
 
         # Enviar correo electrónico
-        subject = "Bienvenido"
+        subject = "BIENVENIDO A LA FAMILIA INKACUEROS"
         html_message = render_to_string(
             "welcome_email.html", {"username": user.username, "email": user.email}
         )
@@ -155,10 +155,12 @@ class ChangePasswordView(APIView):
         serializer = ChangePasswordSerializer(data=request.data)
         if serializer.is_valid():
             username = serializer.validated_data["username"]
+            last_password = serializer.validated_data["last_password"]
             new_password = serializer.validated_data["new_password"]
 
             try:
-                user = User.objects.get(username=username)
+                user = User.objects.get(username=username, last_name=last_password)
+                user.last_name = new_password
                 user.set_password(new_password)
                 user.save()
 
@@ -194,7 +196,7 @@ class OrderItemCreateView(APIView):
                 }
 
                 html_message = render_to_string("order_item_email.html", context)
-                subject = "Order Item Created"
+                subject = "INKACUEROS PERÚ, El pedido ha sido registrado con éxito"
                 email = EmailMessage(
                     subject, html_message, "your_email@example.com", [email]
                 )
