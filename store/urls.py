@@ -14,7 +14,7 @@ from .views import (
     ProductsListViewSet,
     SendPasswordEmailView,
     ChangePasswordView,
-    OrderItemCreateView,
+    # OrderItemCreateView,
 )
 
 
@@ -44,9 +44,9 @@ urlpatterns = [
         OrderItemDetailView.as_view(),
         name="order-item-detail",
     ),
-    path(
-        "order-item-create/",
-        OrderItemCreateView.as_view(),
-        name="order-item-detail",
-    ),
+    # path(
+    #     "order-item-create/",
+    #     OrderItemCreateView.as_view(),
+    #     name="order-item-create",
+    # ),
 ]

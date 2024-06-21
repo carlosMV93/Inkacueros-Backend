@@ -29,6 +29,8 @@ class ProductsSerializer(serializers.ModelSerializer):
 
 
 class ProductsOrderSerializer(serializers.ModelSerializer):
+    # IdProduct = ProductsSerializer()
+
     class Meta:
         model = ProductsOrder
         fields = "__all__"
@@ -41,12 +43,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 # CREAR OREDER ITEM Y ENVIO DE CORREO
-class OrderItemCreateSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
+# class OrderItemCreateSerializer(serializers.ModelSerializer):
+#     email = serializers.EmailField()
 
-    class Meta:
-        model = OrderItem
-        fields = ["Name", "Description", "Price", "email"]
+#     class Meta:
+#         model = OrderItem
+#         fields = ["Name", "Description", "Price", "email"]
 
 
 # DETALLE PRODUCTOS
@@ -162,3 +164,36 @@ class ChangePasswordSerializer(serializers.Serializer):
     username = serializers.CharField()
     last_password = serializers.CharField()
     new_password = serializers.CharField()
+
+
+class OrderItemCreateSerializer(serializers.ModelSerializer):
+    IdProductsOrder = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=ProductsOrder.objects.all()
+    )
+    IdOrder = serializers.PrimaryKeyRelatedField(queryset=Orders.objects.all())
+    IdUser = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    UserEmail = serializers.SerializerMethodField()
+    ProductsOrderDetails = ProductsOrderSerializer(
+        source="IdProductsOrder", many=True, read_only=True
+    )
+
+    class Meta:
+        model = OrderItem
+        fields = [
+            "PictureUrl",
+            "IdProductsOrder",
+            "ProductsOrderDetails",  # Campo para los detalles de ProductsOrder
+            "IdOrder",
+            "IdUser",
+            "UserEmail",  # Campo para el email del usuario
+            "IdentityDocument",
+        ]
+
+    def get_UserEmail(self, obj):
+        return obj.IdUser.email if obj.IdUser else None
+
+    def create(self, validated_data):
+        products_order_data = validated_data.pop("IdProductsOrder")
+        order_item = OrderItem.objects.create(**validated_data)
+        order_item.IdProductsOrder.set(products_order_data)
+        return order_item

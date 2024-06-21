@@ -63,9 +63,9 @@ class ProductsOrdersViewSet(viewsets.ModelViewSet):
     serializer_class = ProductsOrderSerializer
 
 
-class OrderItemViewSet(viewsets.ModelViewSet):
-    queryset = OrderItem.objects.all()
-    serializer_class = OrderItemSerializer
+# class OrderItemViewSet(viewsets.ModelViewSet):
+#     queryset = OrderItem.objects.all()
+#     serializer_class = OrderItemSerializer
 
 
 # DETALLE PRODUCTO
@@ -190,31 +190,97 @@ class ChangePasswordView(APIView):
 
 
 # CREAR ORDERITEM Y ENVIO DE CORREO
-class OrderItemCreateView(APIView):
-    def post(self, request):
-        serializer = OrderItemSerializer(data=request.data)
+# class OrderItemCreateView(APIView):
+#     def post(self, request):
+#         serializer = OrderItemSerializer(data=request.data)
+#         if serializer.is_valid():
+#             order_item = serializer.save()
+#             email = request.data.get("Email", None)
+#             amount = request.data.get("Cantidad", None)
+
+#             if email:
+#                 context = {
+#                     "username": order_item.Name,
+#                     "name": order_item.Name,
+#                     "description": order_item.Description,
+#                     "price": order_item.Price,
+#                     "product_id": order_item.IdProduct.id,
+#                     "order_id": order_item.IdOrder.id,
+#                     "amount": amount,
+#                     "total": amount
+#                     * order_item.Price,  # Realiza la multiplicación aquí
+#                 }
+
+#                 html_message = render_to_string("order_item_email.html", context)
+#                 subject = "INKACUEROS PERÚ, El pedido ha sido registrado con éxito"
+#                 email = EmailMessage(
+#                     subject, html_message, "your_email@example.com", [email]
+#                 )
+#                 email.content_subtype = "html"
+#                 email.send()
+
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OrderItemViewSet(viewsets.ModelViewSet):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = OrderItemCreateSerializer(data=request.data)
         if serializer.is_valid():
             order_item = serializer.save()
-            email = request.data.get("Email", None)
-            amount = request.data.get("Cantidad", None)
 
-            if email:
+            # Obtener los detalles de ProductsOrder del serializer data
+            products_order_details = serializer.data.get("ProductsOrderDetails", None)
+            if products_order_details:
+                # Lista para almacenar los detalles de productos para el correo electrónico
+                products_details_for_email = []
+
+                for product_order in products_order_details:
+                    id_product = product_order.get("IdProduct", None)
+                    amount = product_order.get("Amount", None)
+                    total_price = product_order.get("TotalPrice", None)
+
+                    if id_product:
+                        try:
+                            # Buscar el producto usando el id_product
+                            product = Products.objects.get(pk=id_product)
+
+                            # Añadir detalles del producto al contexto para el correo electrónico
+                            product_details = {
+                                "description": product.Description,
+                                "amount": amount,
+                                "price": product.Price,
+                                "total": total_price,
+                            }
+                            products_details_for_email.append(product_details)
+
+                            # Imprimir los datos del producto en la consola
+                            print(
+                                f"Product Name: {product.Name}, Description: {product.Description}, Price: {product.Price}, PictureUrl: {product.PictureUrl}"
+                            )
+
+                        except Products.DoesNotExist:
+                            print(f"Product with id {id_product} does not exist.")
+
+            # Obtener el email del usuario para enviar el correo electrónico
+            user_email = serializer.data.get("UserEmail", None)
+
+            # Enviar correo electrónico con los detalles del pedido
+            if user_email and products_details_for_email:
                 context = {
-                    "username": order_item.Name,
-                    "name": order_item.Name,
-                    "description": order_item.Description,
-                    "price": order_item.Price,
-                    "product_id": order_item.IdProduct.id,
-                    "order_id": order_item.IdOrder.id,
-                    "amount": amount,
-                    "total": amount
-                    * order_item.Price,  # Realiza la multiplicación aquí
+                    "username": "Bryan",  # Nombre de usuario
+                    "products": products_details_for_email,  # Detalles de los productos
+                    "order_id": 1,  # ID del pedido (ajusta según tu lógica)
                 }
 
                 html_message = render_to_string("order_item_email.html", context)
                 subject = "INKACUEROS PERÚ, El pedido ha sido registrado con éxito"
                 email = EmailMessage(
-                    subject, html_message, "your_email@example.com", [email]
+                    subject, html_message, "your_email@example.com", [user_email]
                 )
                 email.content_subtype = "html"
                 email.send()

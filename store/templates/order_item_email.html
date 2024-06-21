@@ -4,12 +4,14 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Artículo de pedido creado</title>
+    <title>Detalles de Pedido</title>
     <style>
       body {
         font-family: Arial, sans-serif;
         line-height: 1.6;
         padding: 20px;
+        max-width: 600px; /* Ancho máximo del contenido */
+        margin: 0 auto; /* Centrar el contenido en pantallas más grandes */
       }
       .header {
         text-align: right;
@@ -29,6 +31,7 @@
       .table-container table {
         width: 100%;
         border-collapse: collapse;
+        border: 1px solid #ddd; /* Borde de la tabla */
       }
       .table-container th,
       .table-container td {
@@ -40,62 +43,98 @@
         margin-top: 20px;
         font-size: 14px;
       }
+      .center {
+        text-align: center;
+        font-size: 14px;
+      }
       .footer p {
         margin: 5px 0;
+      }
+      .info-table {
+        float: right; /* Alinear a la derecha */
+        width: 40%; /* Ancho del contenedor */
+      }
+      .cotizacion-header {
+        text-align: end;
+        font-size: 14px;
+      }
+      .info-table th,
+      .info-table td {
+        text-align: right; /* Alinear el texto a la derecha */
+        padding: 5px;
+      }
+      .separator {
+        margin-top: 20px;
+        border-top: 1px solid #ddd; /* Línea horizontal */
       }
     </style>
   </head>
   <body>
-    <div class="header">
-      <p>{{ "now"|date:"d F Y"|upper }}</p>
-    </div>
-    <div class="logo-container">
-      <img
-        src="{% static 'images/logoInkakueros.png' %}"
-        alt="Logo Inkacueros"
-        class="logo"
-      />
-      <div class="logo-text">INKACUEROS</div>
-    </div>
-    <h1>Artículo de pedido creado</h1>
-    <p>Hola, {{ username }},</p>
-    <p>Detalles del artículo de su pedido:</p>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Descripción</th>
-            <th>Cantidad</th>
-            <th>Precio unitario</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ description }}</td>
-            <td>{{ amount }}</td>
-            <td>{{ price }}</td>
-            <td>{{ total }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="conditions">
-      <h2>Condiciones de trabajo:</h2>
-    </div>
-    <ul>
-      <li>
-        Deposito de 50% para iniciar el trabajo por adelantado y 50% restante
-        contra entrega del monto total de trabajo
-      </li>
-      <li>10 días hábiles para su entrega final</li>
-      <li>Presentación en Bolsa de polietileno desinfectada</li>
-    </ul>
-    <div class="footer">
-      <p>Servicio al cliente</p>
-      <p>(+51)987 920 416</p>
+    <div style="max-width: 600px; margin: 0 auto">
+      <div class="logo-container">
+        <h1 class="logo-text">INKACUEROS</h1>
+      </div>
 
-      <p>Correo: inkacueros@gmail.com</p>
+      <p>Hola, {{ username }},</p>
+      <div class="cotizacion-header">
+        <h3 style="margin: 0">Fecha</h3>
+        <h3 style="margin: 0">Dirección</h3>
+        <h3 style="margin: 0">RUC O DNI</h3>
+        <h3 style="margin: 0">COTIZACIÓN</h3>
+        <h3 style="margin: 0">0000001</h3>
+      </div>
+      <p>Detalles del artículo de su pedido:</p>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Descripción</th>
+              <th>Cantidad</th>
+              <th>Precio unitario</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+            <tr>
+              <td>{{ product.description }}</td>
+              <td>{{ product.amount }}</td>
+              <td>{{ product.price }}</td>
+              <td>{{ product.total }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="conditions">
+        <h2>Condiciones de trabajo:</h2>
+      </div>
+      <ul>
+        <li>
+          Deposito de 50% para iniciar el trabajo por adelantado y 50% restante
+          contra entrega del monto total de trabajo
+        </li>
+        <li style="color: red">1er deposito : $1440 - 2do deposito $1440</li>
+        <li>10 días hábiles para su entrega final</li>
+        <li>Presentación en Bolsa de polietileno desinfectada</li>
+      </ul>
+      <div class="separator"></div>
+      <div class="center">
+        <p>CUENTA BANCARIA BCP</p>
+        <p>GRTE: Jose Pablo Huaranca Villa</p>
+        <p>194-34346534-0-67</p>
+        <p>CCI 002-194-1344656407690</p>
+        <p>YAPE</p>
+        <p>987920416</p>
+      </div>
+      <div class="separator"></div>
+
+      <div class="footer">
+        <p>Servicio al cliente</p>
+        <p>(+51)987 920 416</p>
+        <p>Correo: inkacueros@gmail.com</p>
+      </div>
     </div>
   </body>
 </html>

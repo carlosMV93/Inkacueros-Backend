@@ -64,7 +64,7 @@ class OrderItem(models.Model):
         max_length=150, default="Llego el correo , se valido"
     )
     StatusOrderEmail = models.BooleanField(default=True)
-    creationDate = models.DateTimeField(default=True)
+    creationDate = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     class Meta:
         db_table = "tb_orderitem"
