@@ -123,7 +123,7 @@ WSGI_APPLICATION = "ecommerce.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "ecommerce-spring-react",
+        "NAME": "dbinkacueros",
         "USER": "sysnet",
         "PASSWORD": "Sys4Log$$sa",
         "HOST": "67.207.87.64",

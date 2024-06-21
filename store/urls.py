@@ -6,6 +6,7 @@ from .views import (
     TypeViewSet,
     BrandViewSet,
     ProductsViewSet,
+    ProductsOrdersViewSet,
     OrdersViewSet,
     OrderItemViewSet,
     OrderItemDetailView,
@@ -21,6 +22,7 @@ router = DefaultRouter()
 router.register(r"type", TypeViewSet, basename="type")
 router.register(r"brand", BrandViewSet, basename="brand")
 router.register(r"products", ProductsViewSet, basename="products")
+router.register(r"productsorder", ProductsOrdersViewSet, basename="productsorder")
 router.register(r"orders", OrdersViewSet, basename="orders")
 router.register(r"orderitem", OrderItemViewSet, basename="orderitem")
 

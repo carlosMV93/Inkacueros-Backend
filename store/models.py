@@ -10,24 +10,22 @@ class Type(models.Model):
 
 
 class Brand(models.Model):
-    Name = models.CharField(max_length=20)
+    Name = models.CharField(max_length=21)
 
     class Meta:
         db_table = "brand"
 
 
 class Orders(models.Model):
-    Delivery_Fee = models.CharField(max_length=50)
+    Delivery_Fee = models.CharField(max_length=51)
     Order_Date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     Order_Status = models.CharField(max_length=50)
     address1 = models.CharField(max_length=50)
-    address2 = models.CharField(max_length=50)
     City = models.CharField(max_length=50)
     Country = models.CharField(max_length=50)
     Name = models.CharField(max_length=50)
     State = models.CharField(max_length=50)
     Zipcode = models.CharField(max_length=70)
-    Sub_Total = models.FloatField()
 
     class Meta:
         db_table = "tb_orders"
@@ -45,14 +43,28 @@ class Products(models.Model):
         db_table = "tb_products"
 
 
+class ProductsOrder(models.Model):
+    Amount = models.IntegerField(default=0)
+    TotalPrice = models.FloatField(default=0.00)
+    creationDate = models.DateTimeField(default=True)
+    IdProduct = models.ForeignKey(Products, on_delete=models.CASCADE, default=0)
+
+    class Meta:
+        db_table = "tb_product_order"
+
+
 class OrderItem(models.Model):
-    Name = models.CharField(max_length=50, default="")
-    Description = models.CharField(max_length=255, default="")
-    Price = models.IntegerField(default=0)
     PictureUrl = models.CharField(max_length=70, default="")
-    IdProduct = models.ForeignKey(Products, on_delete=models.CASCADE)
-    IdOrder = models.ForeignKey(Orders, on_delete=models.CASCADE)
-    IdUser = models.ForeignKey(User, on_delete=models.CASCADE)
+    IdProductsOrder = models.ManyToManyField(ProductsOrder)
+    IdOrder = models.ForeignKey(Orders, on_delete=models.CASCADE, default=0)
+    IdUser = models.ForeignKey(User, on_delete=models.CASCADE, default=0)
+    # ORDERS TABLE -ADMIN
+    IdentityDocument = models.CharField(max_length=25, default="")
+    StatusOrderDetail = models.CharField(
+        max_length=150, default="Llego el correo , se valido"
+    )
+    StatusOrderEmail = models.BooleanField(default=True)
+    creationDate = models.DateTimeField(default=True)
 
     class Meta:
         db_table = "tb_orderitem"

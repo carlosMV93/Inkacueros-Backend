@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status, permissions, generics
-from .models import Type, Brand, OrderItem, Orders, Products
+from .models import Type, Brand, OrderItem, Orders, Products, ProductsOrder
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -26,6 +26,7 @@ from .serializers import (
     EmailSerializer,
     ChangePasswordSerializer,
     OrderItemCreateSerializer,
+    ProductsOrderSerializer,
 )
 
 
@@ -55,6 +56,11 @@ class OrdersViewSet(viewsets.ModelViewSet):
 class ProductsViewSet(viewsets.ModelViewSet):
     queryset = Products.objects.all()
     serializer_class = ProductsSerializer
+
+
+class ProductsOrdersViewSet(viewsets.ModelViewSet):
+    queryset = ProductsOrder.objects.all()
+    serializer_class = ProductsOrderSerializer
 
 
 class OrderItemViewSet(viewsets.ModelViewSet):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Type, OrderItem, Orders, Brand, Products
+from .models import Type, OrderItem, Orders, Brand, Products, ProductsOrder
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
@@ -25,6 +25,12 @@ class OrdersSerializer(serializers.ModelSerializer):
 class ProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
+        fields = "__all__"
+
+
+class ProductsOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductsOrder
         fields = "__all__"
 
 
@@ -88,7 +94,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 # DETALLE PEDIDO
 class OrderItemDetailSerializer(serializers.ModelSerializer):
-    IdProduct = ProductsSerializer()
+    IdProductsOrder = ProductsOrderSerializer(
+        many=True
+    )  # Usando many=True para una lista de ProductsOrder
     IdOrder = OrdersSerializer()
     IdUser = UserSerializer()
 
