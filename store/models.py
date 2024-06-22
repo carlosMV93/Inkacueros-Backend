@@ -33,7 +33,7 @@ class Orders(models.Model):
 
 class Products(models.Model):
     Name = models.CharField(max_length=50, default="")
-    Description = models.CharField(max_length=255, default="")
+    Description = models.CharField(max_length=800, default="")
     Price = models.IntegerField(default=0)
     PictureUrl = models.CharField(max_length=70, default="")
     IdType = models.ForeignKey(Type, on_delete=models.CASCADE)

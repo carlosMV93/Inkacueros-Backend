@@ -14,7 +14,7 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Exponer el puerto 8000 para que pueda ser accedido externamente
-EXPOSE 8000
+EXPOSE 8080
 
 # Comando para ejecutar la aplicación Django en el contenedor
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
