@@ -120,16 +120,16 @@ WSGI_APPLICATION = "ecommerce.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 # Conexión a Base de Datos Servidor
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "dbinkacueros",
-        "USER": "sysnet",
-        "PASSWORD": "Sys4Log$$sa",
-        "HOST": "67.207.87.64",
-        "PORT": 3306,
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": "dbinkacueros",
+#         "USER": "sysnet",
+#         "PASSWORD": "",
+#         "HOST": "",
+#         "PORT": 3306,
+#     }
+# }
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.sqlite3",
