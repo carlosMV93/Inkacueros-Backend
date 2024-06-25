@@ -173,6 +173,12 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
     IdOrder = serializers.PrimaryKeyRelatedField(queryset=Orders.objects.all())
     IdUser = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     UserEmail = serializers.SerializerMethodField()
+    Address1 = serializers.SerializerMethodField()  # Nuevo campo para la dirección
+    Name = serializers.SerializerMethodField()  # Nuevo campo para la dirección
+    TotalPrice = (
+        serializers.SerializerMethodField()
+    )  # Nuevo campo para el total del precio
+
     ProductsOrderDetails = ProductsOrderSerializer(
         source="IdProductsOrder", many=True, read_only=True
     )
@@ -185,12 +191,27 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
             "ProductsOrderDetails",  # Campo para los detalles de ProductsOrder
             "IdOrder",
             "IdUser",
-            "UserEmail",  # Campo para el email del usuario
+            "UserEmail",
             "IdentityDocument",
+            "creationDate",
+            "Address1",
+            "Name",
+            "TotalPrice",
         ]
 
     def get_UserEmail(self, obj):
         return obj.IdUser.email if obj.IdUser else None
+
+    def get_Address1(self, obj):
+        return obj.IdOrder.address1 if obj.IdOrder else None
+
+    def get_Name(self, obj):
+        return obj.IdOrder.Name if obj.IdOrder else None
+
+    def get_TotalPrice(self, obj):
+        return sum(
+            product_order.TotalPrice for product_order in obj.IdProductsOrder.all()
+        )
 
     def create(self, validated_data):
         products_order_data = validated_data.pop("IdProductsOrder")

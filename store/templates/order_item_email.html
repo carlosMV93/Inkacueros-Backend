@@ -67,21 +67,45 @@
         margin-top: 20px;
         border-top: 1px solid #ddd; /* Línea horizontal */
       }
+      .horizontal-table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+      }
+      .horizontal-table td {
+        vertical-align: top;
+        padding: 0 10px;
+      }
+      .logo-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .logo-container img {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+      }
+      .logo-text {
+        font-size: 24px;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
     <div style="max-width: 600px; margin: 0 auto">
       <div class="logo-container">
+        <img src="https://i.ibb.co/Gtx0Q3h/ic-Photoroom.png" alt="Logo" />
         <h1 class="logo-text">INKACUEROS</h1>
       </div>
 
-      <p>Hola, {{ username }},</p>
+      <p>Hola, {{ name }},</p>
       <div class="cotizacion-header">
-        <h3 style="margin: 0">Fecha</h3>
-        <h3 style="margin: 0">Dirección</h3>
-        <h3 style="margin: 0">RUC O DNI</h3>
+        <h3 style="margin: 0">{{ creationDate }}</h3>
+        <h3 style="margin: 0">{{ address1 }}</h3>
+        <h3 style="margin: 0">RUC O DNI: {{ identity_document }}</h3>
         <h3 style="margin: 0">COTIZACIÓN</h3>
-        <h3 style="margin: 0">0000001</h3>
+        <h3 style="margin: 0">{{order_id}}</h3>
       </div>
       <p>Detalles del artículo de su pedido:</p>
       <div class="table-container">
@@ -107,15 +131,44 @@
         </table>
       </div>
 
+      <table class="horizontal-table">
+        <tr>
+          <td>
+            <div class="left-div">
+              <p>DIRIGIDO A</p>
+              <p>{{ name }}</p>
+              <p>{{identity_document}}</p>
+              <p>BOLETA</p>
+            </div>
+          </td>
+          <td>
+            <div class="center-div">
+              <p>SUBTOTAL</p>
+              <p>IMP. (18%)</p>
+              <p>TOTAL</p>
+            </div>
+          </td>
+          <td>
+            <div class="right-div">
+              <p>S/ {{totalPriceOrder}}</p>
+              <p>S/ 0</p>
+              <p>S/ {{totalPriceOrder}}</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+
       <div class="conditions">
         <h2>Condiciones de trabajo:</h2>
       </div>
       <ul>
         <li>
-          Deposito de 50% para iniciar el trabajo por adelantado y 50% restante
+          Depósito de 50% para iniciar el trabajo por adelantado y 50% restante
           contra entrega del monto total de trabajo
         </li>
-        <li style="color: red">1er deposito : $1440 - 2do deposito $1440</li>
+        <li style="color: red">
+          1er depósito: S/{{first_deposit}} - 2do depósito S/{{second_deposit}}
+        </li>
         <li>10 días hábiles para su entrega final</li>
         <li>Presentación en Bolsa de polietileno desinfectada</li>
       </ul>
@@ -124,9 +177,9 @@
         <p>CUENTA BANCARIA BCP</p>
         <p>GRTE: Jose Pablo Huaranca Villa</p>
         <p>194-34346534-0-67</p>
-        <p>CCI 002-194-1344656407690</p>
+        <p>CCI 002-19413434653407690</p>
         <p>YAPE</p>
-        <p>987920416</p>
+        <p>987-920-416</p>
       </div>
       <div class="separator"></div>
 

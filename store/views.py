@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import IsAuthenticated
+from datetime import datetime, timedelta
 
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -189,41 +190,7 @@ class ChangePasswordView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# CREAR ORDERITEM Y ENVIO DE CORREO
-# class OrderItemCreateView(APIView):
-#     def post(self, request):
-#         serializer = OrderItemSerializer(data=request.data)
-#         if serializer.is_valid():
-#             order_item = serializer.save()
-#             email = request.data.get("Email", None)
-#             amount = request.data.get("Cantidad", None)
-
-#             if email:
-#                 context = {
-#                     "username": order_item.Name,
-#                     "name": order_item.Name,
-#                     "description": order_item.Description,
-#                     "price": order_item.Price,
-#                     "product_id": order_item.IdProduct.id,
-#                     "order_id": order_item.IdOrder.id,
-#                     "amount": amount,
-#                     "total": amount
-#                     * order_item.Price,  # Realiza la multiplicación aquí
-#                 }
-
-#                 html_message = render_to_string("order_item_email.html", context)
-#                 subject = "INKACUEROS PERÚ, El pedido ha sido registrado con éxito"
-#                 email = EmailMessage(
-#                     subject, html_message, "your_email@example.com", [email]
-#                 )
-#                 email.content_subtype = "html"
-#                 email.send()
-
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+# CREACIÓN DE ORDERITEM Y ENVIO DE CORREO
 class OrderItemViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemCreateSerializer
@@ -243,7 +210,6 @@ class OrderItemViewSet(viewsets.ModelViewSet):
                     id_product = product_order.get("IdProduct", None)
                     amount = product_order.get("Amount", None)
                     total_price = product_order.get("TotalPrice", None)
-
                     if id_product:
                         try:
                             # Buscar el producto usando el id_product
@@ -258,23 +224,44 @@ class OrderItemViewSet(viewsets.ModelViewSet):
                             }
                             products_details_for_email.append(product_details)
 
-                            # Imprimir los datos del producto en la consola
-                            print(
-                                f"Product Name: {product.Name}, Description: {product.Description}, Price: {product.Price}, PictureUrl: {product.PictureUrl}"
-                            )
-
                         except Products.DoesNotExist:
                             print(f"Product with id {id_product} does not exist.")
 
             # Obtener el email del usuario para enviar el correo electrónico
-            user_email = serializer.data.get("UserEmail", None)
 
+            user_email = serializer.data.get("UserEmail", None)
+            address1 = serializer.data.get("Address1", None)
+            name = serializer.data.get("Name", None)
+            totalPriceOrder = serializer.data.get("TotalPrice", None)
+
+            first_deposit = totalPriceOrder / 2
+            second_deposit = totalPriceOrder / 2
+
+            id_product_order = 100000 + id_product
+            identity_document = serializer.data.get("IdentityDocument", None)
+            creation_date_str = serializer.data.get("creationDate", None)
+            # Ajustar la fecha restando 5 horas y formatearla como DD/MM/YYYY
+            if creation_date_str:
+                creation_date = datetime.fromisoformat(
+                    creation_date_str.replace("Z", "")
+                )
+                creation_date -= timedelta(hours=5)
+                creation_date_formatted = creation_date.strftime("%d/%m/%Y %H:%M")
+            else:
+                creation_date_formatted = None
             # Enviar correo electrónico con los detalles del pedido
             if user_email and products_details_for_email:
                 context = {
-                    "username": "Bryan",  # Nombre de usuario
-                    "products": products_details_for_email,  # Detalles de los productos
-                    "order_id": 1,  # ID del pedido (ajusta según tu lógica)
+                    "name": name,
+                    "products": products_details_for_email,
+                    "order_id": id_product_order + totalPriceOrder,
+                    "address1": address1,
+                    "identity_document": identity_document,
+                    "creationDate": creation_date_formatted,
+                    "id_product_order": id_product_order,
+                    "totalPriceOrder": totalPriceOrder,
+                    "first_deposit": first_deposit,
+                    "second_deposit": second_deposit,
                 }
 
                 html_message = render_to_string("order_item_email.html", context)
